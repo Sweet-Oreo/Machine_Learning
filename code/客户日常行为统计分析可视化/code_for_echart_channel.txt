@@ -1,0 +1,15 @@
+import pymongo
+from pyecharts.charts import Bar
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.bank
+collection = db.bank
+
+x = ["银行网点", "朋友圈", "手机银行", "银行人员外拓服务", "生活场景"]
+y1 = [3176, 2919, 5180, 2836, 1302]
+y2 = [3136, 2267, 4055, 1385]
+bar = Bar()
+bar.add_xaxis(x)
+bar.add_yaxis("期望享受优惠促销活动渠道", y1)
+bar.add_yaxis("期望了解贷款产品渠道", y2)
+bar.render()

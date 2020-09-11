@@ -1,0 +1,23 @@
+import pymongo
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+atm = collection.find({"转账主要方式": "ATM等自助设备"}).count()
+counter = collection.find({"转账主要方式": "柜面"}).count()
+mobile_banking = collection.find({"转账主要方式": "手机银行或网上银行"}).count()
+commission = collection.find({"转账主要方式": "请别人代转账"}).count()
+
+x = ["ATM等自助设备", "柜面", "手机银行", "请别人代转账"]
+y = [atm, counter, mobile_banking, commission]
+plt.bar(x=x, height=y, color='#66ffff')
+for x1, y1 in zip(x, y):
+    plt.text(x1, y1 + 1, str(y1), ha='center', va='bottom', fontsize=14, rotation=0)
+plt.title('各种转账方式总人数')
+plt.xlabel('转账方式')
+plt.ylabel('总人数')
+plt.show()

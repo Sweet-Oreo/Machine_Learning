@@ -1,0 +1,34 @@
+import pymongo
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+websiteAndTel = 0
+faceToFace = 0
+circleFriend = 0
+mobile_banking = 0
+noRequirement = 0
+app = collection.find({"了解贷款产品": {"$ne": "allselected"}})
+for function in app:
+    if "了解贷款产品" in function.keys():
+        functions = (function["了解贷款产品"]).split('&')
+        for func in functions:
+            if func == '银行网站或电话客服': websiteAndTel += 1
+            if func == '银行网点面对面': faceToFace += 1
+            if func == '朋友圈产品介绍': circleFriend += 1
+            if func == '手机银行APP': mobile_banking += 1
+            if func == '无贷款需求': noRequirement += 1
+
+x = ["银行网站或电话客服", "银行网点面对面", "朋友圈产品介绍", "手机银行APP", "无贷款需求"]
+y = [websiteAndTel, faceToFace, circleFriend, mobile_banking, noRequirement]
+plt.bar(x=x, height=y, color='#ff82ab')
+for x1, y1 in zip(x, y):
+    plt.text(x1, y1 + 1, str(y1), ha='center', va='bottom', fontsize=14, rotation=0)
+plt.title('期望了解贷款产品途径统计')
+plt.xlabel('贷款途径')
+plt.ylabel('期望了解贷款产品途径总人数')
+plt.show()

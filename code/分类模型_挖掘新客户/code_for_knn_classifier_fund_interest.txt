@@ -1,0 +1,22 @@
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.neighbors import KNeighborsClassifier as knnModel
+
+df = pd.read_excel(r"D:\fund.xls")
+print(df.describe())
+df = (df-df.mean()) / df.std()
+x_train = df.iloc[:,:]
+
+km = KMeans(n_clusters=4, random_state=0)
+km = km.fit(df)
+y_train = km.labels_
+md = knnModel(n_neighbors=3)
+md.fit(x_train,y_train)
+print(x_train)
+print(y_train)
+
+test = [[(1-0.42988)/0.49509, (1-2.344832)/1.336828, (0-0.616157)/0.568420, (1-0.740341)/0.729893]]
+ans = md.predict(test)
+print("The category is: ", ans)
+
+

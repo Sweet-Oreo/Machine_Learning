@@ -1,0 +1,62 @@
+import pymongo
+import xlwt
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+wb = xlwt.Workbook()
+ws = wb.add_sheet("Python", cell_overwrite_ok = True)
+alignment = xlwt.Alignment()
+alignment.horz = xlwt.Alignment.HORZ_CENTER
+alignment.vert = xlwt.Alignment.VERT_CENTER
+style = xlwt.XFStyle
+style.alignment = alignment
+
+data = collection.find()
+ws.write(0, 0, "sex")
+ws.write(0, 1, "age")
+ws.write(0, 2, "degree")
+ws.write(0, 3, "fund_interest")
+i = 1
+for person in data:
+    j = 0
+    if person["性别"] == "男":
+        ws.write(i, j, 0)
+    if person["性别"] == "女":
+        ws.write(i, j, 1)
+    j += 1
+    if person["年龄"] == "under 20":
+        ws.write(i, j, 0)
+    if person["年龄"] == "20-30":
+        ws.write(i, j, 1)
+    if person["年龄"] == "30-40":
+        ws.write(i, j, 2)
+    if person["年龄"] == "40-50":
+        ws.write(i, j, 3)
+    if person["年龄"] == "50-60":
+        ws.write(i, j, 4)
+    if person["年龄"] == "above 60":
+        ws.write(i, j, 5)
+    j += 1
+    if person["学历"] == "高中及以下":
+        ws.write(i, j, 0)
+    if person["学历"] == "专科及本科":
+        ws.write(i, j, 1)
+    if person["学历"] == "研究生及以上":
+        ws.write(i, j, 2)
+    j += 1
+    k = 0
+    function = person["手机银行APP功能使用"]
+    functions = function.split('&')
+    for func in functions:
+        if func == "基金或投资理财":
+            k += 1
+    product = person["目前使用银行产品"]
+    products = product.split('&')
+    for pro in products:
+        if pro == "基金等投资理财":
+            k += 1
+    ws.write(i, j, k)
+    i += 1
+wb.save("fund.xls")

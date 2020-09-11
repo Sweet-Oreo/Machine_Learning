@@ -1,0 +1,72 @@
+import pymongo
+import xlwt
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+wb = xlwt.Workbook()
+ws = wb.add_sheet("Python", cell_overwrite_ok = True)
+alignment = xlwt.Alignment()
+alignment.horz = xlwt.Alignment.HORZ_CENTER
+alignment.vert = xlwt.Alignment.VERT_CENTER
+style = xlwt.XFStyle
+style.alignment = alignment
+
+data = collection.find()
+ws.write(0, 0, "age")
+ws.write(0, 1, "degree")
+ws.write(0, 2, "frequencies")
+ws.write(0, 3, "functions")
+ws.write(0, 4, "bank_products")
+i = 1
+for person in data:
+    j = 0
+    if person["年龄"] == "under 20":
+        ws.write(i, j, 0)
+    if person["年龄"] == "20-30":
+        ws.write(i, j, 1)
+    if person["年龄"] == "30-40":
+        ws.write(i, j, 2)
+    if person["年龄"] == "40-50":
+        ws.write(i, j, 3)
+    if person["年龄"] == "50-60":
+        ws.write(i, j, 4)
+    if person["年龄"] == "above 60":
+        ws.write(i, j, 5)
+    j += 1
+    if person["学历"] == "高中及以下":
+        ws.write(i, j, 0)
+    if person["学历"] == "专科及本科":
+        ws.write(i, j, 1)
+    if person["学历"] == "研究生及以上":
+        ws.write(i, j, 2)
+    j += 1
+    k = 0
+    if person["月到网点次数"] == "1-2":
+        k += 1
+    if person["月到网点次数"] == "2次以上":
+        k += 2
+    if person["月用手机银行次数"] == "1-2":
+        k += 1
+    if person["月用手机银行次数"] == "2次以上":
+        k += 2
+    ws.write(i, j, k)
+    j += 1
+    function = person["手机银行APP功能使用"]
+    func = function.split('&')
+    numbers1 = len(func)
+    if person["手机银行APP功能使用"] == "不使用":
+        ws.write(i, j, 0)
+    else:
+        ws.write(i, j, numbers1)
+    j += 1
+    bank_product = person["目前使用银行产品"]
+    product = bank_product.split('&')
+    numbers2 = len(product)
+    if person["目前使用银行产品"] == "仅存取款":
+        ws.write(i, j, 0)
+    else:
+        ws.write(i, j, numbers2)
+    i += 1
+wb.save("cluster.xls")

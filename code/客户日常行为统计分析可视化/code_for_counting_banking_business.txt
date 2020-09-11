@@ -1,0 +1,23 @@
+import pymongo
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+atm = collection.find({"常用办理银行业务方式": "寻找周边ATM"}).count()
+official_account = collection.find({"常用办理银行业务方式": "银行公众号或小程序"}).count()
+counter = collection.find({"常用办理银行业务方式": "银行网点柜面"}).count()
+mobile_banking = collection.find({"常用办理银行业务方式": "手机银行或网上银行"}).count()
+
+x = ["ATM", "银行公众号或小程序", "柜面", "手机银行"]
+y = [atm, official_account, counter, mobile_banking]
+plt.bar(x=x, height=y, color='#ff3030')
+for x1, y1 in zip(x, y):
+    plt.text(x1, y1 + 1, str(y1), ha='center', va='bottom', fontsize=14, rotation=0)
+plt.title('办理银行业务方式总人数')
+plt.xlabel('办理银行业务方式')
+plt.ylabel('总人数')
+plt.show()

@@ -1,0 +1,33 @@
+import pymongo
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+branch = 0
+mobile_banking = 0
+circleFriend = 0
+extension_service = 0
+variety = 0
+app = collection.find({"参与优惠促销活动渠道": {"$ne": "allselected"}})
+for function in app:
+    functions = (function["参与优惠促销活动渠道"]).split('&')
+    for func in functions:
+        if func == '银行网点': branch += 1
+        if func == '手机银行': mobile_banking += 1
+        if func == '朋友圈': circleFriend += 1
+        if func == '银行人员外拓服务': extension_service += 1
+        if func == '各类生活场景': variety += 1
+
+x = ["银行网点", "手机银行", "朋友圈", "银行人员外拓服务", "各类生活场景"]
+y = [branch, mobile_banking, circleFriend, extension_service, variety]
+plt.bar(x=x, height=y, color='#cd661d')
+for x1, y1 in zip(x, y):
+    plt.text(x1, y1 + 1, str(y1), ha='center', va='bottom', fontsize=14, rotation=0)
+plt.title('期望享受优惠促销活动渠道统计')
+plt.xlabel('期望渠道')
+plt.ylabel('以对应渠道享受优惠促销活动总人数')
+plt.show()

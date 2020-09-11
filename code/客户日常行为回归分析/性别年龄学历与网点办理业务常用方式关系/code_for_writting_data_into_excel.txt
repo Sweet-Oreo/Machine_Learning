@@ -1,0 +1,58 @@
+import pymongo
+import xlwt
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+wb = xlwt.Workbook()
+ws = wb.add_sheet("Python", cell_overwrite_ok = True)
+alignment = xlwt.Alignment()
+alignment.horz = xlwt.Alignment.HORZ_CENTER
+alignment.vert = xlwt.Alignment.VERT_CENTER
+style = xlwt.XFStyle
+style.alignment = alignment
+
+data = collection.find()
+ws.write(0, 0, "sex")
+ws.write(0, 1, "age")
+ws.write(0, 2, "degree")
+ws.write(0, 3, "channel")
+i = 1
+for person in data:
+    j = 0
+    if person["性别"] == "男":
+        ws.write(i, j, (0-0.42988) / 0.49509)
+    if person["性别"] == "女":
+        ws.write(i, j, (1-0.42988) / 0.49509)
+    j += 1
+    if person["年龄"] == "under 20":
+        ws.write(i, j, (0-2.344832) / 1.336828)
+    if person["年龄"] == "20-30":
+        ws.write(i, j, (1-2.344832) / 1.336828)
+    if person["年龄"] == "30-40":
+        ws.write(i, j, (2-2.344832) / 1.336828)
+    if person["年龄"] == "40-50":
+        ws.write(i, j, (3-2.344832) / 1.336828)
+    if person["年龄"] == "50-60":
+        ws.write(i, j, (4-2.344832) / 1.336828)
+    if person["年龄"] == "above 60":
+        ws.write(i, j, (5-2.344832) / 1.336828)
+    j += 1
+    if person["学历"] == "高中及以下":
+        ws.write(i, j, (0-0.616157) / 0.568420)
+    if person["学历"] == "专科及本科":
+        ws.write(i, j, (1-0.616157) / 0.568420)
+    if person["学历"] == "研究生及以上":
+        ws.write(i, j, (2-0.616157) / 0.568420)
+    j += 1
+    if person["使用最多网点业务办理"] == "ATM等自助设备":
+        ws.write(i, j, (0-1.568866) / 1.497005)
+    if person["使用最多网点业务办理"] == "柜面办理":
+        ws.write(i, j, (2-1.568866) / 1.497005)
+    if person["使用最多网点业务办理"] == "贵宾服务":
+        ws.write(i, j, (3-1.568866) / 1.497005)
+    if person["使用最多网点业务办理"] == "经理辅助使用移动设备":
+        ws.write(i, j, (1-1.568866) / 1.497005)
+    i += 1
+wb.save("data4.xls")

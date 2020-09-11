@@ -1,0 +1,26 @@
+import pymongo
+from matplotlib import pyplot as plt
+plt.rcParams['font.sans-serif'] = ['SimHei']
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+first = collection.find({"学历": "高中及以下"}).count()
+second = collection.find({"学历": "专科及本科"}).count()
+third = collection.find({"学历": "研究生及以上"}).count()
+
+
+plt.figure(figsize=(6, 6))
+labels = [u'高中及以下',u'专科及本科', u'研究生及以上']
+sizes = [first, second, third]
+colors = ['#836fff', '#ffb90f', '#bfefff']
+explode = (0, 0, 0)
+patches, text1, text2 = plt.pie(sizes, explode=explode, labels=labels, colors=colors, labeldistance = 1.1,
+                                autopct='%3.1f%%', shadow=False, startangle=90, pctdistance=0.6)
+plt.axis('equal')
+plt.show()
+
+
+
+

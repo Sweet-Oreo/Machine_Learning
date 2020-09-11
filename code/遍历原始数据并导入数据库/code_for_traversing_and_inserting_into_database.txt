@@ -1,0 +1,725 @@
+import xlrd
+import pymongo
+import os
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+allQuestionnaires = 0
+validQuestionnaires = 0
+fileList = os.listdir('E:\\data')
+
+# Find out the mode for question 8 and question 9
+listOfMode8 = [0, 0, 0, 0]
+listOfMode9 = [0, 0, 0, 0]
+listOfMode13 = [0, 0, 0, 0]
+listOfMode19 = [0, 0, 0, 0]
+for file in fileList:
+    filePath = 'E:\\data' + '\\' + file
+    book = xlrd.open_workbook(filePath)
+    sheetNumber = len(book.sheet_names())
+    for i in range(sheetNumber):
+        sheet = book.sheet_by_index(i)
+        rowNumber = sheet.nrows
+        if rowNumber == 0:  # If the sheet is empty, skip over
+            continue
+
+        # If all gender, age and degree are not filled, skip over
+        selected_1 = 0
+        q1_A = sheet.cell_value(3, 0)
+        if q1_A == "√":
+            selected_1 = selected_1 + 1
+        q1_B = sheet.cell_value(4, 0)
+        if q1_B == "√":
+            selected_1 = selected_1 + 1
+
+        selected_2 = 0;
+        q2_A = sheet.cell_value(6, 0)
+        if q2_A == "√":
+            selected_2 = selected_2 + 1
+        q2_B = sheet.cell_value(7, 0)
+        if q2_B == "√":
+            selected_2 = selected_2 + 1
+        q2_C = sheet.cell_value(8, 0)
+        if q2_C == "√":
+            selected_2 = selected_2 + 1
+        q2_D = sheet.cell_value(9, 0)
+        if q2_D == "√":
+            selected_2 = selected_2 + 1
+        q2_E = sheet.cell_value(10, 0)
+        if q2_E == "√":
+            selected_2 = selected_2 + 1
+        q2_F = sheet.cell_value(11, 0)
+        if q2_F == "√":
+            selected_2 = selected_2 + 1
+
+        selected_3 = 0
+        q3_A = sheet.cell_value(13, 0)
+        if q3_A == "√":
+            selected_3 = selected_3 + 1
+        q3_B = sheet.cell_value(14, 0)
+        if q3_B == "√":
+            selected_3 = selected_3 + 1
+        q3_C = sheet.cell_value(15, 0)
+        if q3_C == "√":
+            selected_3 = selected_3 + 1
+        # If all gender, age and degree are not filled, skip this sheet
+        if selected_1 + selected_2 + selected_3 == 0:
+            continue
+
+        # Find out mode of question 8
+        q8_A = sheet.cell_value(36, 0)
+        if q8_A == "√":
+            listOfMode8[0] = listOfMode8[0] + 1
+        q8_B = sheet.cell_value(37, 0)
+        if q8_B == "√":
+            listOfMode8[1] = listOfMode8[1] + 1
+        q8_C = sheet.cell_value(38, 0)
+        if q8_C == "√":
+            listOfMode8[2] = listOfMode8[2] + 1
+        q8_D = sheet.cell_value(39, 0)
+        if q8_D == "√":
+            listOfMode8[3] = listOfMode8[3] + 1
+
+        # Find out mode of question 9
+        q9_A = sheet.cell_value(41, 0)
+        if q9_A == "√":
+            listOfMode9[0] = listOfMode9[0] + 1
+        q9_B = sheet.cell_value(42, 0)
+        if q9_B == "√":
+            listOfMode9[1] = listOfMode9[1] + 1
+        q9_C = sheet.cell_value(43, 0)
+        if q9_C == "√":
+            listOfMode9[2] = listOfMode9[2] + 1
+        q9_D = sheet.cell_value(44, 0)
+        if q9_D == "√":
+            listOfMode9[3] = listOfMode9[3] + 1
+
+        # Find out mode of question 13
+        q13_A = sheet.cell_value(65, 0)
+        if q13_A == "√":
+            listOfMode13[0] = listOfMode13[0] + 1
+        q13_B = sheet.cell_value(66, 0)
+        if q13_B == "√":
+            listOfMode13[1] = listOfMode13[1] + 1
+        q13_C = sheet.cell_value(67, 0)
+        if q13_C == "√":
+            listOfMode13[2] = listOfMode13[2] + 1
+        q13_D = sheet.cell_value(68, 0)
+        if q13_D == "√":
+            listOfMode13[3] = listOfMode13[3] + 1
+
+        # Find out the mode of question 19
+        q19_A = sheet.cell_value(96, 0)
+        if q19_A == "√":
+            listOfMode19[0] = listOfMode19[0] + 1
+        q19_B = sheet.cell_value(97, 0)
+        if q19_B == "√":
+            listOfMode19[1] = listOfMode19[1] + 1
+        q19_C = sheet.cell_value(98, 0)
+        if q19_C == "√":
+            listOfMode19[2] = listOfMode19[2] + 1
+        q19_D = sheet.cell_value(99, 0)
+        if q19_D == "√":
+            listOfMode19[3] = listOfMode19[3] + 1
+
+indexOfModeOf8 = listOfMode8.index(max(listOfMode8))
+if indexOfModeOf8 == 0: modeOf8 = "寻找周边ATM"
+if indexOfModeOf8 == 1: modeOf8 = "银行公众号或小程序"
+if indexOfModeOf8 == 2: modeOf8 = "银行网点柜面"
+if indexOfModeOf8 == 3: modeOf8 = "手机银行或网上银行"
+
+indexOfModeOf9 = listOfMode9.index(max(listOfMode9))
+if indexOfModeOf9 == 0: modeOf9 = "ATM等自助设备"
+if indexOfModeOf9 == 1: modeOf9 = "柜面办理"
+if indexOfModeOf9 == 2: modeOf9 = "贵宾服务"
+if indexOfModeOf9 == 3: modeOf9 = "经理辅助使用移动设备"
+
+indexOfModeOf19 = listOfMode19.index(max(listOfMode19))
+if indexOfModeOf19 == 0: modeOf19 = "手机银行"
+if indexOfModeOf19 == 1: modeOf19 = "微信支付宝"
+if indexOfModeOf19 == 2: modeOf19 = "公众号"
+if indexOfModeOf19 == 3: modeOf19 = "到水电气暖公司或物业"
+
+indexOfModeOf13 = listOfMode13.index(max(listOfMode13))
+if indexOfModeOf13 == 0: modeOf13 = "线上办理省时省力不去网点"
+if indexOfModeOf13 == 1: modeOf13 = "时间原因只能线上办理"
+if indexOfModeOf13 == 2: modeOf13 = "线上专属服务沟通后再去网点"
+if indexOfModeOf13 == 3: modeOf13 = "直接去网点办理"
+
+
+# Traverse all the sheets
+for file in fileList:
+    filePath = 'E:\\data' + '\\' + file
+    book = xlrd.open_workbook(filePath)
+    sheetNumber = len(book.sheet_names())
+    for i in range(sheetNumber):
+        paper = {}
+        sheet = book.sheet_by_index(i)
+        allQuestionnaires = allQuestionnaires + 1  # Count all the questionnaires
+        rowNumber = sheet.nrows
+        if rowNumber == 0:  # If the sheet is empty, skip over
+            continue
+
+        # If all gender, age and degree are not filled, skip over
+        selected_1 = 0
+        q1_A = sheet.cell_value(3, 0)
+        if q1_A == "√":
+            selected_1 = selected_1 + 1
+        q1_B = sheet.cell_value(4, 0)
+        if q1_B == "√":
+            selected_1 = selected_1 + 1
+
+        selected_2 = 0
+        q2_A = sheet.cell_value(6, 0)
+        if q2_A == "√":
+            selected_2 = selected_2 + 1
+        q2_B = sheet.cell_value(7, 0)
+        if q2_B == "√":
+            selected_2 = selected_2 + 1
+        q2_C = sheet.cell_value(8, 0)
+        if q2_C == "√":
+            selected_2 = selected_2 + 1
+        q2_D = sheet.cell_value(9, 0)
+        if q2_D == "√":
+            selected_2 = selected_2 + 1
+        q2_E = sheet.cell_value(10, 0)
+        if q2_E == "√":
+            selected_2 = selected_2 + 1
+        q2_F = sheet.cell_value(11, 0)
+        if q2_F == "√":
+            selected_2 = selected_2 + 1
+
+        selected_3 = 0
+        q3_A = sheet.cell_value(13, 0)
+        if q3_A == "√":
+            selected_3 = selected_3 + 1
+        q3_B = sheet.cell_value(14, 0)
+        if q3_B == "√":
+            selected_3 = selected_3 + 1
+        q3_C = sheet.cell_value(15, 0)
+        if q3_C == "√":
+            selected_3 = selected_3 + 1
+        # If all gender, age and degree are not filled, skip this sheet
+        if selected_1 + selected_2 + selected_3 == 0:
+            continue
+
+        # Aggregate survey results one by one
+        # Question 1
+        selected = 0
+        q1_A = sheet.cell_value(3, 0)
+        if q1_A == "√":
+            selected = selected + 1
+        q1_B = sheet.cell_value(4, 0)
+        if q1_B == "√":
+            selected = selected + 1
+
+        if selected == 0:  # If this question is not filled, set the default value "female"
+            paper["性别"] = "男"
+        if q1_B == "√":
+            paper["性别"] = "女"
+        if q1_A == "√":  # If this question is multiply chosen, set the default value "female"
+            paper["性别"] = "男"
+
+        # Question 2
+        selected = 0
+        q2_A = sheet.cell_value(6, 0)
+        if q2_A == "√":
+            selected = selected + 1
+        q2_B = sheet.cell_value(7, 0)
+        if q2_B == "√":
+            selected = selected + 1
+        q2_C = sheet.cell_value(8, 0)
+        if q2_C == "√":
+            selected = selected + 1
+        q2_D = sheet.cell_value(9, 0)
+        if q2_D == "√":
+            selected = selected + 1
+        q2_E = sheet.cell_value(10, 0)
+        if q2_E == "√":
+            selected = selected + 1
+        q2_F = sheet.cell_value(11, 0)
+        if q2_F == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["年龄"] = "30-40"
+        if q2_A == "√":
+            paper["年龄"] = "under 20"
+        if q2_B == "√":
+            paper["年龄"] = "20-30"
+        if q2_D == "√":
+            paper["年龄"] = "40-50"
+        if q2_E == "√":
+            paper["年龄"] = "50-60"
+        if q2_F == "√":
+            paper["年龄"] = "above 60"
+        if q2_C == "√":
+            paper["年龄"] = "30-40"
+
+        # Question 3
+        selected = 0
+        q3_A = sheet.cell_value(13, 0)
+        if q3_A == "√":
+            selected = selected + 1
+        q3_B = sheet.cell_value(14, 0)
+        if q3_B == "√":
+            selected = selected + 1
+        q3_C = sheet.cell_value(15, 0)
+        if q3_C == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["学历"] = "专科及本科"
+        if q3_A == "√":
+            paper["学历"] = "高中及以下"
+        if q3_C == "√":
+            paper["学历"] = "研究生及以上"
+        if q3_B == "√":
+            paper["学历"] = "专科及本科"
+
+        # Question 4
+        selected = 0
+        q4_A = sheet.cell_value(17, 0)
+        if q4_A == "√":
+            selected = selected + 1
+        q4_B = sheet.cell_value(18, 0)
+        if q4_B == "√":
+            selected = selected + 1
+        q4_C = sheet.cell_value(19, 0)
+        if q4_C == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["月到网点次数"] = "1-2"
+        if q4_A == "√":
+            paper["月到网点次数"] = "不足1次"
+        if q4_C == "√":
+            paper["月到网点次数"] = "2次以上"
+        if q4_B == "√":
+            paper["月到网点次数"] = "1-2"
+
+        # Question 5
+        selected = 0
+        q5_A = sheet.cell_value(21, 0)
+        if q5_A == "√":
+            selected = selected + 1
+        q5_B = sheet.cell_value(22, 0)
+        if q5_B == "√":
+            selected = selected + 1
+        q5_C = sheet.cell_value(23, 0)
+        if q5_C == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["月用手机银行次数"] = "1-2"
+        if q5_A == "√":
+            paper["月用手机银行次数"] = "不足1次"
+        if q5_C == "√":
+            paper["月用手机银行次数"] = "2次以上"
+        if q5_B == "√":
+            paper["月用手机银行次数"] = "1-2"
+
+        # Question 6
+        selected = 0
+        q6_A = sheet.cell_value(25, 0)
+        if q6_A == "√":
+            selected = selected + 1
+        q6_B = sheet.cell_value(26, 0)
+        if q6_B == "√":
+            selected = selected + 1
+        q6_C = sheet.cell_value(27, 0)
+        if q6_C == "√":
+            selected = selected + 1
+        q6_D = sheet.cell_value(28, 0)
+        if q6_D == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["日常支付方式"] = "微信支付宝"
+        if q6_B == "√":
+            paper["日常支付方式"] = "手机银行APP"
+        if q6_D == "√":
+            paper["日常支付方式"] = "刷卡"
+        if q6_A == "√":
+            paper["日常支付方式"] = "现金"
+        if q6_C == "√":
+            paper["日常支付方式"] = "微信支付宝"
+
+        # Question 7
+        selected = 0
+        q7_A = sheet.cell_value(30, 0)
+        if q7_A == "√":
+            selected = selected + 1
+        q7_B = sheet.cell_value(31, 0)
+        if q7_B == "√":
+            selected = selected + 1
+        q7_C = sheet.cell_value(32, 0)
+        if q7_C == "√":
+            selected = selected + 1
+        q7_D = sheet.cell_value(33, 0)
+        if q7_D == "√":
+            selected = selected + 1
+        q7_E = sheet.cell_value(34, 0)
+        if q7_E == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["常用查询账户余额方式"] = "手机银行"
+        if q7_D == "√":
+            paper["常用查询账户余额方式"] = "柜面"
+        if q7_E == "√":
+            paper["常用查询账户余额方式"] = "客服电话"
+        if q7_C == "√":
+            paper["常用查询账户余额方式"] = "ATM"
+        if q7_A == "√":
+            paper["常用查询账户余额方式"] = "公众号"
+        if q7_B == "√":
+            paper["常用查询账户余额方式"] = "手机银行"
+
+        # Question 8
+        selected = 0
+        q8_A = sheet.cell_value(36, 0)
+        if q8_A == "√":
+            selected = selected + 1
+        q8_B = sheet.cell_value(37, 0)
+        if q8_B == "√":
+            selected = selected + 1
+        q8_C = sheet.cell_value(38, 0)
+        if q8_C == "√":
+            selected = selected + 1
+        q8_D = sheet.cell_value(39, 0)
+        if q8_D == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["常用办理银行业务方式"] = modeOf8
+        if q8_A == "√":
+            paper["常用办理银行业务方式"] = "寻找周边ATM"
+        if q8_B == "√":
+            paper["常用办理银行业务方式"] = "银行公众号或小程序"
+        if q8_C == "√":
+            paper["常用办理银行业务方式"] = "银行网点柜面"
+        if q8_D == "√":
+            paper["常用办理银行业务方式"] = "手机银行或网上银行"
+
+        # Question 9
+        selected = 0
+        q9_A = sheet.cell_value(41, 0)
+        if q9_A == "√":
+            selected = selected + 1
+        q9_B = sheet.cell_value(42, 0)
+        if q9_B == "√":
+            selected = selected + 1
+        q9_C = sheet.cell_value(43, 0)
+        if q9_C == "√":
+            selected = selected + 1
+        q9_D = sheet.cell_value(44, 0)
+        if q9_D == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["使用最多网点业务办理"] = modeOf9
+        if q9_C == "√":
+            paper["使用最多网点业务办理"] = "贵宾服务"
+        if q9_D == "√":
+            paper["使用最多网点业务办理"] = "经理辅助使用移动设备"
+        if q9_B == "√":
+            paper["使用最多网点业务办理"] = "柜面办理"
+        if q9_A == "√":
+            paper["使用最多网点业务办理"] = "ATM等自助设备"
+
+        # Question 10
+        q10_A = sheet.cell_value(46, 0)
+        q10_B = sheet.cell_value(47, 0)
+        q10_C = sheet.cell_value(48, 0)
+        q10_D = sheet.cell_value(49, 0)
+        q10_E = sheet.cell_value(50, 0)
+        q10_F = sheet.cell_value(51, 0)
+        q10_G = sheet.cell_value(52, 0)
+
+        selectedNumber = 0
+        if q10_A == "√": selectedNumber = selectedNumber + 1
+        if q10_B == "√": selectedNumber = selectedNumber + 1
+        if q10_C == "√": selectedNumber = selectedNumber + 1
+        if q10_D == "√": selectedNumber = selectedNumber + 1
+        if q10_E == "√": selectedNumber = selectedNumber + 1
+        if q10_F == "√": selectedNumber = selectedNumber + 1
+        if q10_G == "√": selectedNumber = selectedNumber + 1
+
+        selected = ""
+        if q10_A == "√": selected += "&转账支付"
+        if q10_B == "√": selected += "&贷款相关"
+        if q10_C == "√": selected += "&基金或投资理财"
+        if q10_D == "√": selected += "&查询账户等"
+        if q10_E == "√": selected += "&生活缴费"
+        if q10_F == "√": selected += "&领用银行发放优惠券"
+        if q10_G == "√": selected += "&不使用"
+        selected_strip1 = selected.strip('&')
+        paper["手机银行APP功能使用"] = selected_strip1
+        if selectedNumber == 0: paper["手机银行APP功能使用"] = "不使用"
+        if q10_G == "√" and selectedNumber > 1:
+            selected_strip2 = selected_strip1[:-4]
+            paper["手机银行APP功能使用"] = selected_strip2
+
+        # Question 11
+        q11_A = sheet.cell_value(54, 0)
+        q11_B = sheet.cell_value(55, 0)
+        q11_C = sheet.cell_value(56, 0)
+        q11_D = sheet.cell_value(57, 0)
+
+        selectedNumber = 0
+        if q11_A == "√": selectedNumber = selectedNumber + 1
+        if q11_B == "√": selectedNumber = selectedNumber + 1
+        if q11_C == "√": selectedNumber = selectedNumber + 1
+        if q11_D == "√": selectedNumber = selectedNumber + 1
+
+        selected = ""
+        if q11_A == "√": selected += "&线下网点服务渠道"
+        if q11_B == "√": selected += "&手机银行渠道"
+        if q11_C == "√": selected += "&各渠道服务相互结合"
+        if q11_D == "√": selected += "&不在乎渠道更看重产品竞争力"
+        selected_strip1 = selected.strip('&')
+        paper["银行服务渠道倾向"] = selected_strip1
+        if selectedNumber == 0: paper["银行服务渠道倾向"] = "各渠道服务相互结合"
+
+        # Question 12
+        q12_A = sheet.cell_value(59, 0)
+        q12_B = sheet.cell_value(60, 0)
+        q12_C = sheet.cell_value(61, 0)
+        q12_D = sheet.cell_value(62, 0)
+        q12_E = sheet.cell_value(63, 0)
+
+        selectedNumber = 0
+        if q12_A == "√": selectedNumber = selectedNumber + 1
+        if q12_B == "√": selectedNumber = selectedNumber + 1
+        if q12_C == "√": selectedNumber = selectedNumber + 1
+        if q12_D == "√": selectedNumber = selectedNumber + 1
+        if q12_E == "√": selectedNumber = selectedNumber + 1
+
+        selected = ""
+        if q12_A == "√": selected += "&银行网点"
+        if q12_B == "√": selected += "&手机银行"
+        if q12_C == "√": selected += "&朋友圈"
+        if q12_D == "√": selected += "&银行人员外拓服务"
+        if q12_E == "√": selected += "&各类生活场景"
+        selected_strip1 = selected.strip('&')
+        paper["参与优惠促销活动渠道"] = selected_strip1
+        if selectedNumber == 0: paper["参与优惠促销活动渠道"] = "不参与优惠促销"
+
+        # Question 13
+        selected = 0
+        q13_A = sheet.cell_value(65, 0)
+        if q13_A == "√":
+            selected = selected + 1
+        q13_B = sheet.cell_value(66, 0)
+        if q13_B == "√":
+            selected = selected + 1
+        q13_C = sheet.cell_value(67, 0)
+        if q13_C == "√":
+            selected = selected + 1
+        q13_D = sheet.cell_value(68, 0)
+        if q13_D == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["选择业务办理渠道现状"] = modeOf13
+        if q13_C == "√":
+            paper["选择业务办理渠道现状"] = "线上专属服务沟通后再去网点"
+        if q13_D == "√":
+            paper["选择业务办理渠道现状"] = "直接去网点办理"
+        if q13_B == "√":
+            paper["选择业务办理渠道现状"] = "时间原因只能线上办理"
+        if q13_A == "√":
+            paper["选择业务办理渠道现状"] = "线上办理省时省力不去网点"
+
+        # Question 14
+        q14_A = sheet.cell_value(70, 0)
+        q14_B = sheet.cell_value(71, 0)
+        q14_C = sheet.cell_value(72, 0)
+        q14_D = sheet.cell_value(73, 0)
+        q14_E = sheet.cell_value(74, 0)
+
+        selectedNumber = 0
+        if q14_A == "√": selectedNumber = selectedNumber + 1
+        if q14_B == "√": selectedNumber = selectedNumber + 1
+        if q14_C == "√": selectedNumber = selectedNumber + 1
+        if q14_D == "√": selectedNumber = selectedNumber + 1
+        if q14_E == "√": selectedNumber = selectedNumber + 1
+
+        selected = ""
+        if q14_A == "√": selected += "&基金等投资理财"
+        if q14_B == "√": selected += "&消费贷款"
+        if q14_C == "√": selected += "&手机银行或网上银行"
+        if q14_D == "√": selected += "&信用卡透支"
+        if q14_E == "√": selected += "&仅存取款"
+        selected_strip1 = selected.strip('&')
+        paper["目前使用银行产品"] = selected_strip1
+        if selectedNumber == 0: paper["目前使用银行产品"] = "仅存取款"
+        if q14_E == "√" and selectedNumber > 1:
+            selected_strip2 = selected_strip1[:-5]
+            paper["目前使用银行产品"] = selected_strip2
+
+        # Question 15
+        selected = 0
+        q15_A = sheet.cell_value(76, 0)
+        if q15_A == "√":
+            selected = selected + 1
+        q15_B = sheet.cell_value(77, 0)
+        if q15_B == "√":
+            selected = selected + 1
+        q15_C = sheet.cell_value(78, 0)
+        if q15_C == "√":
+            selected = selected + 1
+        q15_D = sheet.cell_value(79, 0)
+        if q15_D == "√":
+            selected = selected + 1
+        q15_E = sheet.cell_value(80, 0)
+        if q15_E == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["使用最多透支支付"] = "不透支支付"
+        if q15_B == "√":
+            paper["使用最多透支支付"] = "白条"
+        if q15_C == "√":
+            paper["使用最多透支支付"] = "线下刷信用卡"
+        if q15_A == "√":
+            paper["使用最多透支支付"] = "花呗"
+        if q15_D == "√":
+            paper["使用最多透支支付"] = "微信支付宝绑定信用卡"
+        if q15_E == "√":
+            paper["使用最多透支支付"] = "不透支支付"
+
+        # Question 16
+        selected = 0
+        q16_A = sheet.cell_value(82, 0)
+        if q16_A == "√":
+            selected = selected + 1
+        q16_B = sheet.cell_value(83, 0)
+        if q16_B == "√":
+            selected = selected + 1
+        q16_C = sheet.cell_value(84, 0)
+        if q16_C == "√":
+            selected = selected + 1
+        q16_D = sheet.cell_value(85, 0)
+        if q16_D == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["转账主要方式"] = "手机银行或网上银行"
+        if q16_D == "√":
+            paper["转账主要方式"] = "请别人代转账"
+        if q16_B == "√":
+            paper["转账主要方式"] = "柜面"
+        if q16_A == "√":
+            paper["转账主要方式"] = "ATM等自助设备"
+        if q16_C == "√":
+            paper["转账主要方式"] = "手机银行或网上银行"
+
+        # Question 17
+        q17_A = sheet.cell_value(87, 0)
+        q17_B = sheet.cell_value(88, 0)
+        q17_C = sheet.cell_value(89, 0)
+        q17_D = sheet.cell_value(90, 0)
+        q17_E = sheet.cell_value(91, 0)
+
+        selectedNumber = 0
+        if q17_A == "√": selectedNumber = selectedNumber + 1
+        if q17_B == "√": selectedNumber = selectedNumber + 1
+        if q17_C == "√": selectedNumber = selectedNumber + 1
+        if q17_D == "√": selectedNumber = selectedNumber + 1
+        if q17_E == "√": selectedNumber = selectedNumber + 1
+
+        selected = ""
+        if q17_A == "√": selected += "&银行网站或电话客服"
+        if q17_B == "√": selected += "&银行网点面对面"
+        if q17_C == "√": selected += "&朋友圈产品介绍"
+        if q17_D == "√": selected += "&手机银行APP"
+        if q17_E == "√": selected += "&无贷款需求"
+        selected_strip1 = selected.strip('&')
+        paper["了解贷款产品"] = selected_strip1
+        if selectedNumber == 0: paper["了解贷款产品"] = "无贷款需求"
+        if q17_E == "√" and selectedNumber > 1:
+            selected_strip2 = selected_strip1[:-6]
+            paper["了解贷款产品"] = selected_strip2
+
+        # Question 18
+        selected = 0
+        q18_A = sheet.cell_value(93, 0)
+        if q18_A == "√":
+            selected = selected + 1
+        q18_B = sheet.cell_value(94, 0)
+        if q18_B == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["是否考虑使用授信额度"] = "不会"
+        if q18_A == "√":
+            paper["是否考虑使用授信额度"] = "会"
+        if q18_B == "√":
+            paper["是否考虑使用授信额度"] = "不会"
+
+        # Question 19
+        selected = 0
+        q19_A = sheet.cell_value(96, 0)
+        if q19_A == "√":
+            selected = selected + 1
+        q19_B = sheet.cell_value(97, 0)
+        if q19_B == "√":
+            selected = selected + 1
+        q19_C = sheet.cell_value(98, 0)
+        if q19_C == "√":
+            selected = selected + 1
+        q19_D = sheet.cell_value(99, 0)
+        if q19_D == "√":
+            selected = selected + 1
+
+        if selected == 0:
+            paper["生活缴费方式"] = modeOf19
+        if q19_D == "√":
+            paper["生活缴费方式"] = "到水电气暖公司或物业"
+        if q19_B == "√":
+            paper["生活缴费方式"] = "微信支付宝"
+        if q19_A == "√":
+            paper["生活缴费方式"] = "手机银行"
+        if q19_C == "√":
+            paper["生活缴费方式"] = "公众号"
+
+        validQuestionnaires = validQuestionnaires + 1  # Count the number of valid questionnaires
+        collection.insert_one(paper)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

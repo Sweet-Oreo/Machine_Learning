@@ -1,0 +1,29 @@
+import pymongo
+import pygal
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+service_branch = 0
+direct_branch = 0
+time_limit = 0
+save_time = 0
+app = collection.find({"选择业务办理渠道现状": {"$ne": "allselected"}})
+for function in app:
+    if "选择业务办理渠道现状" in function.keys():
+        functions = (function["选择业务办理渠道现状"]).split('&')
+        for func in functions:
+            if func == '线上专属服务沟通后再去网点': service_branch += 1
+            if func == '直接去网点办理': direct_branch += 1
+            if func == '时间原因只能线上办理': time_limit += 1
+            if func == '线上办理省时省力不去网点': save_time += 1
+
+chart = pygal.HorizontalBar()
+chart.title = "客户选择银行业务办理渠道现状"
+chart.x_title = "客户人数"
+x = ["线上专属服务沟通后再去网点", "直接去网点办理享受面对面服务", "时间原因只能线上办理", "线上办理省时省力不去网点"]
+y = [service_branch, direct_branch, time_limit, save_time]
+chart.x_labels = x
+chart.add("现状", y)
+chart.render_to_file('current_situation_business.svg')

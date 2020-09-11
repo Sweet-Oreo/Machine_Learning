@@ -1,0 +1,30 @@
+import pymongo
+import pygal
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+offline = 0
+mobile_banking = 0
+combination = 0
+completeness = 0
+app = collection.find({"银行服务渠道倾向": {"$ne": "allselected"}})
+for function in app:
+    if "银行服务渠道倾向" in function.keys():
+        functions = (function["银行服务渠道倾向"]).split('&')
+        for func in functions:
+            if func == '线下网点服务渠道': offline += 1
+            if func == '手机银行渠道': mobile_banking += 1
+            if func == '各渠道服务相互结合': combination += 1
+            if func == '不在乎渠道更看重产品竞争力': completeness += 1
+
+chart = pygal.HorizontalBar()
+chart.title = "客户选择银行业务办理渠道现状"
+chart.x_title = "客户人数"
+x = ["更看重线下网点渠道的服务水平，网点多、离家近、服务好的银行",
+     "更看重手机银行渠道的便捷性，安全性", "更看重各渠道服务相互结合", "不在乎渠道，更看重产品是不是有竞争力"]
+y = [offline, mobile_banking, combination, completeness]
+chart.x_labels = x
+chart.add("渠道", y)
+chart.render_to_file('preferent_channel.svg')

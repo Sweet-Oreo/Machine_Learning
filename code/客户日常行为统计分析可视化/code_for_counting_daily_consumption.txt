@@ -1,0 +1,23 @@
+import pymongo
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+cash = collection.find({"日常支付方式": "现金"}).count()
+mobile_banking = collection.find({"日常支付方式": "手机银行APP"}).count()
+weChatOrAlipay = collection.find({"日常支付方式": "微信支付宝"}).count()
+card = collection.find({"日常支付方式": "刷卡"}).count()
+
+x = ["现金", "手机银行", "微信支付宝", "刷卡"]
+y = [cash, mobile_banking, weChatOrAlipay, card]
+plt.bar(x=x, height=y, color='#6495ed')
+for x1, y1 in zip(x, y):
+    plt.text(x1, y1 + 1, str(y1), ha='center', va='bottom', fontsize=14, rotation=0)
+plt.title('日常生活消费支付方式总人数')
+plt.xlabel('支付方式')
+plt.ylabel('总人数')
+plt.show()

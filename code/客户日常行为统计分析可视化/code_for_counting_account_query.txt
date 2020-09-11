@@ -1,0 +1,24 @@
+import pymongo
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+weChat = collection.find({"常用查询账户余额方式": "公众号"}).count()
+mobile_banking = collection.find({"常用查询账户余额方式": "手机银行"}).count()
+atm = collection.find({"常用查询账户余额方式": "ATM"}).count()
+counter = collection.find({"常用查询账户余额方式": "柜面"}).count()
+service_tel = collection.find({"常用查询账户余额方式": "客服电话"}).count()
+
+x = ["公众号", "手机银行", "ATM", "柜面", "客服电话"]
+y = [weChat, mobile_banking, atm, counter, service_tel]
+plt.bar(x=x, height=y, color='#ffff33')
+for x1, y1 in zip(x, y):
+    plt.text(x1, y1 + 1, str(y1), ha='center', va='bottom', fontsize=14, rotation=0)
+plt.title('账户余额查询方式总人数')
+plt.xlabel('查询方式')
+plt.ylabel('总人数')
+plt.show()

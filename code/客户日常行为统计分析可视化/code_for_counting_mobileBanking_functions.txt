@@ -1,0 +1,40 @@
+import pymongo
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+remittance_transfer = 0
+loan = 0
+investment = 0
+account_query = 0
+living_payment = 0
+coupon = 0
+nonuse = 0
+app = collection.find({"手机银行APP功能使用": {"$ne": "allselected"}})
+for function in app:
+    functions = (function["手机银行APP功能使用"]).split('&')
+    for func in functions:
+        if func == '转账支付': remittance_transfer += 1
+        if func == '贷款相关': loan += 1
+        if func == '基金或投资理财': investment += 1
+        if func == '查询账户等': account_query += 1
+        if func == '生活缴费': living_payment += 1
+        if func == '领用银行发放优惠券': coupon += 1
+        if func == '不使用': nonuse += 1
+
+x = ["转账支付", "贷款相关", "基金或投资理财", "查询账户", "生活缴费", "领用优惠券", "不适用手机银行"]
+y = [remittance_transfer, loan, investment, account_query, living_payment, coupon, nonuse]
+plt.bar(x=x, height=y, color='#00ff66')
+for x1, y1 in zip(x, y):
+    plt.text(x1, y1 + 1, str(y1), ha='center', va='bottom', fontsize=14, rotation=0)
+plt.title('手机银行功能使用情况')
+plt.xlabel('手机银行功能')
+plt.ylabel('使用功能总人数')
+plt.show()
+
+
+

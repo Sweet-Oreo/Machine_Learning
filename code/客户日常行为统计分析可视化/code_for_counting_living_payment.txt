@@ -1,0 +1,23 @@
+import pymongo
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+mobile_banking = collection.find({"生活缴费方式": "手机银行"}).count()
+weCharOrAlipay = collection.find({"生活缴费方式": "微信支付宝"}).count()
+official_account = collection.find({"生活缴费方式": "公众号"}).count()
+company = collection.find({"生活缴费方式": "到水电气暖公司或物业"}).count()
+
+x = ["手机银行", "微信支付宝", "公众号", "到水电气暖公司或物业"]
+y = [mobile_banking, weCharOrAlipay, official_account, company]
+plt.bar(x=x, height=y, color='#9933cc')
+for x1, y1 in zip(x, y):
+    plt.text(x1, y1 + 1, str(y1), ha='center', va='bottom', fontsize=14, rotation=0)
+plt.title('生活缴费方式总人数')
+plt.xlabel('生活缴费方式')
+plt.ylabel('总人数')
+plt.show()

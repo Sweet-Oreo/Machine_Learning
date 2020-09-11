@@ -1,0 +1,63 @@
+import pymongo
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+cell1 = cell2 = cell3 = cell4 = cell5 = 0
+cell6 = cell7 = cell8 = cell9 = cell10 = 0
+cell11 = cell12 = cell13 = cell14 = cell15 = 0
+frequency1 = collection.find({"月用手机银行次数": "不足1次"})
+for customer in frequency1:
+    products = customer["目前使用银行产品"].split('&')
+    if len(products) == 1:
+        if products[0] == "仅存取款": cell1 += 1
+        else: cell2 += 1
+    if len(products) == 2:
+        cell3 += 1
+    if len(products) == 3:
+        cell4 += 1
+    if len(products) == 4:
+        cell5 += 1
+
+frequency2 = collection.find({"月用手机银行次数": "1-2"})
+for customer in frequency2:
+    products = customer["目前使用银行产品"].split('&')
+    if len(products) == 1:
+        if products[0] == "仅存取款": cell6 += 1
+        else: cell7 += 1
+    if len(products) == 2:
+        cell8 += 1
+    if len(products) == 3:
+        cell9 += 1
+    if len(products) == 4:
+        cell10 += 1
+
+frequency3 = collection.find({"月用手机银行次数": "2次以上"})
+for customer in frequency3:
+    products = customer["目前使用银行产品"].split('&')
+    if len(products) == 1:
+        if products[0] == "仅存取款": cell11 += 1
+        else: cell12 += 1
+    if len(products) == 2:
+        cell13 += 1
+    if len(products) == 3:
+        cell14 += 1
+    if len(products) == 4:
+        cell15 += 1
+
+print(cell1)
+print(cell2)
+print(cell3)
+print(cell4)
+print(cell5)
+print(cell6)
+print(cell7)
+print(cell8)
+print(cell9)
+print(cell10)
+print(cell11)
+print(cell12)
+print(cell13)
+print(cell14)
+print(cell15)

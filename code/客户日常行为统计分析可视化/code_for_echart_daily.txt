@@ -1,0 +1,17 @@
+import pymongo
+from pyecharts.charts import Bar
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.bank
+collection = db.bank
+
+x = ["柜面", "ATM", "手机银行", "微信支付宝"]
+y1 = [1077, 1329, 5244, 260]
+y2 = [2303, 938, 2847, 1884]
+y3 = [2694, 1165, 3986]
+bar = Bar()
+bar.add_xaxis(x)
+bar.add_yaxis("账户余额查询", y1)
+bar.add_yaxis("办理银行业务", y2)
+bar.add_yaxis("转账", y3)
+bar.render()

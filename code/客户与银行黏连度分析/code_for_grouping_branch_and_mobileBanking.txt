@@ -1,0 +1,24 @@
+import pymongo
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+cell1 = collection.find({"月到网点次数": "不足1次", "月用手机银行次数": "不足1次"}).count()
+cell2 = collection.find({"月到网点次数": "不足1次", "月用手机银行次数": "1-2"}).count()
+cell3 = collection.find({"月到网点次数": "不足1次", "月用手机银行次数": "2次以上"}).count()
+cell4 = collection.find({"月到网点次数": "1-2", "月用手机银行次数": "不足1次"}).count()
+cell5 = collection.find({"月到网点次数": "1-2", "月用手机银行次数": "1-2"}).count()
+cell6 = collection.find({"月到网点次数": "1-2", "月用手机银行次数": "2次以上"}).count()
+cell7 = collection.find({"月到网点次数": "2次以上", "月用手机银行次数": "不足1次"}).count()
+cell8 = collection.find({"月到网点次数": "2次以上", "月用手机银行次数": "1-2"}).count()
+cell9 = collection.find({"月到网点次数": "2次以上", "月用手机银行次数": "2次以上"}).count()
+print(cell1)
+print(cell2)
+print(cell3)
+print(cell4)
+print(cell5)
+print(cell6)
+print(cell7)
+print(cell8)
+print(cell9)

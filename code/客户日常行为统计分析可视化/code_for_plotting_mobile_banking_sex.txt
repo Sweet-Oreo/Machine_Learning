@@ -1,0 +1,69 @@
+import pymongo
+import pygal
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+male_4_1 = collection.find({"性别": "男", "月到网点次数": {"$ne": "不足1次"}}).count()
+male_4_2 = collection.find({"性别": "男"}).count()
+male_4 = round(male_4_1 / male_4_2, 2)
+female_4_1 = collection.find({"性别": "女", "月到网点次数": {"$ne": "不足1次"}}).count()
+female_4_2 = collection.find({"性别": "女"}).count()
+female_4 = round(female_4_1 / female_4_2, 2)
+
+male_5_1 = collection.find({"性别": "男", "月用手机银行次数": {"$ne": "不足1次"}}).count()
+male_5_2 = collection.find({"性别": "男"}).count()
+male_5 = round(male_5_1 / male_5_2, 2)
+female_5_1 = collection.find({"性别": "女", "月用手机银行次数": {"$ne": "不足1次"}}).count()
+female_5_2 = collection.find({"性别": "女"}).count()
+female_5 = round(female_5_1 / female_5_2, 2)
+
+male_6_1 = collection.find({"性别": "男", "日常支付方式": "手机银行APP"}).count()
+male_6_2 = collection.find({"性别": "男"}).count()
+male_6 = round(male_6_1 / male_6_2, 2)
+female_6_1 = collection.find({"性别": "女", "日常支付方式": "手机银行APP"}).count()
+female_6_2 = collection.find({"性别": "女"}).count()
+female_6 = round(female_6_1 / female_6_2, 2)
+
+male_7_1 = collection.find({"性别": "男", "常用查询账户余额方式": "手机银行"}).count()
+male_7_2 = collection.find({"性别": "男"}).count()
+male_7 = round(male_7_1 / male_7_2, 2)
+female_7_1 = collection.find({"性别": "女", "常用查询账户余额方式": "手机银行"}).count()
+female_7_2 = collection.find({"性别": "女"}).count()
+female_7 = round(female_7_1 / female_7_2, 2)
+
+male_8_1 = collection.find({"性别": "男", "常用办理银行业务方式": "手机银行或网上银行"}).count()
+male_8_2 = collection.find({"性别": "男"}).count()
+male_8 = round(male_8_1 / male_8_2, 2)
+female_8_1 = collection.find({"性别": "女", "常用办理银行业务方式": "手机银行或网上银行"}).count()
+female_8_2 = collection.find({"性别": "女"}).count()
+female_8 = round(female_8_1 / female_8_2, 2)
+
+male_16_1 = collection.find({"性别": "男", "转账主要方式": "手机银行或网上银行"}).count()
+male_16_2 = collection.find({"性别": "男"}).count()
+male_16 = round(male_16_1 / male_16_2, 2)
+female_16_1 = collection.find({"性别": "女", "转账主要方式": "手机银行或网上银行"}).count()
+female_16_2 = collection.find({"性别": "女"}).count()
+female_16 = round(female_16_1 / female_16_2, 2)
+
+male_19_1 = collection.find({"性别": "男", "生活缴费方式": "手机银行"}).count()
+male_19_2 = collection.find({"性别": "男"}).count()
+male_19 = round(male_19_1 / male_19_2, 2)
+female_19_1 = collection.find({"性别": "女", "生活缴费方式": "手机银行"}).count()
+female_19_2 = collection.find({"性别": "女"}).count()
+female_19 = round(female_19_1 / female_19_2, 2)
+
+x_data = ['月到网点次数', '月用手机银行次数', '日常支付', '查询账户余额', '办理银行业务', '转账', '生活缴费']
+y_data1 = [male_4, male_5, male_6, male_7, male_8, male_16, male_19]
+y_data2 = [female_4, female_5, female_6, female_7, female_8, female_16, female_19]
+stacked_bar = pygal.StackedBar()
+stacked_bar.add("男性", y_data1)
+stacked_bar.add("女性", y_data2)
+stacked_bar.x_labels = x_data
+stacked_bar.y_labels = [0.2, 0.4, 0.6, 0.8, 1.0]
+stacked_bar.title = "以性别划分分析客户行为中使用手机银行的比例"
+stacked_bar.x_title = "客户行为"
+stacked_bar.y_title = "使用手机银行人数/总人数"
+stacked_bar.legend_at_bottom = True
+stacked_bar.render_to_file("APP.svg")

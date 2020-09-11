@@ -1,0 +1,92 @@
+import pymongo
+import pygal
+
+client = pymongo.MongoClient(host='localhost', port=27017)
+db = client.my_database
+collection = db.my_collection
+
+low_4_1 = collection.find({"学历": "高中及以下", "月到网点次数": {"$ne": "不足1次"}}).count()
+low_4_2 = collection.find({"学历": "高中及以下"}).count()
+low_4 = round(low_4_1 / low_4_2, 2)
+medium_4_1 = collection.find({"学历": "专科及本科", "月到网点次数": {"$ne": "不足1次"}}).count()
+medium_4_2 = collection.find({"学历": "专科及本科"}).count()
+medium_4 = round(medium_4_1 / medium_4_2, 2)
+high_4_1 = collection.find({"学历": "研究生及以上", "月到网点次数": {"$ne": "不足1次"}}).count()
+high_4_2 = collection.find({"学历": "研究生及以上"}).count()
+high_4 = round(high_4_1 / high_4_2, 2)
+
+low_5_1 = collection.find({"学历": "高中及以下", "月用手机银行次数": {"$ne": "不足1次"}}).count()
+low_5_2 = collection.find({"学历": "高中及以下"}).count()
+low_5 = round(low_5_1 / low_5_2, 2)
+medium_5_1 = collection.find({"学历": "专科及本科", "月用手机银行次数": {"$ne": "不足1次"}}).count()
+medium_5_2 = collection.find({"学历": "专科及本科"}).count()
+medium_5 = round(medium_5_1 / medium_5_2, 2)
+high_5_1 = collection.find({"学历": "研究生及以上", "月用手机银行次数": {"$ne": "不足1次"}}).count()
+high_5_2 = collection.find({"学历": "研究生及以上"}).count()
+high_5 = round(high_5_1 / high_5_2, 2)
+
+low_6_1 = collection.find({"学历": "高中及以下", "日常支付方式": "手机银行APP"}).count()
+low_6_2 = collection.find({"学历": "高中及以下"}).count()
+low_6 = round(low_6_1 / low_6_2, 2)
+medium_6_1 = collection.find({"学历": "专科及本科", "日常支付方式": "手机银行APP"}).count()
+medium_6_2 = collection.find({"学历": "专科及本科"}).count()
+medium_6 = round(medium_6_1 / medium_6_2, 2)
+high_6_1 = collection.find({"学历": "研究生及以上", "日常支付方式": "手机银行APP"}).count()
+high_6_2 = collection.find({"学历": "研究生及以上"}).count()
+high_6 = round(high_6_1 / high_6_2, 2)
+
+low_7_1 = collection.find({"学历": "高中及以下", "常用查询账户余额方式": "手机银行"}).count()
+low_7_2 = collection.find({"学历": "高中及以下"}).count()
+low_7 = round(low_7_1 / low_7_2, 2)
+medium_7_1 = collection.find({"学历": "专科及本科", "常用查询账户余额方式": "手机银行"}).count()
+medium_7_2 = collection.find({"学历": "专科及本科"}).count()
+medium_7 = round(medium_7_1 / medium_7_2, 2)
+high_7_1 = collection.find({"学历": "研究生及以上", "常用查询账户余额方式": "手机银行"}).count()
+high_7_2 = collection.find({"学历": "研究生及以上"}).count()
+high_7 = round(high_7_1 / high_7_2, 2)
+
+low_8_1 = collection.find({"学历": "高中及以下", "常用办理银行业务方式": "手机银行或网上银行"}).count()
+low_8_2 = collection.find({"学历": "高中及以下"}).count()
+low_8 = round(low_8_1 / low_8_2, 2)
+medium_8_1 = collection.find({"学历": "专科及本科", "常用办理银行业务方式": "手机银行或网上银行"}).count()
+medium_8_2 = collection.find({"学历": "专科及本科"}).count()
+medium_8 = round(medium_8_1 / medium_8_2, 2)
+high_8_1 = collection.find({"学历": "研究生及以上", "常用办理银行业务方式": "手机银行或网上银行"}).count()
+high_8_2 = collection.find({"学历": "研究生及以上"}).count()
+high_8 = round(high_8_1 / high_8_2, 2)
+
+low_16_1 = collection.find({"学历": "高中及以下", "转账主要方式": "手机银行或网上银行"}).count()
+low_16_2 = collection.find({"学历": "高中及以下"}).count()
+low_16 = round(low_16_1 / low_16_2, 2)
+medium_16_1 = collection.find({"学历": "专科及本科", "转账主要方式": "手机银行或网上银行"}).count()
+medium_16_2 = collection.find({"学历": "专科及本科"}).count()
+medium_16 = round(medium_16_1 / medium_16_2, 2)
+high_16_1 = collection.find({"学历": "研究生及以上", "转账主要方式": "手机银行或网上银行"}).count()
+high_16_2 = collection.find({"学历": "研究生及以上"}).count()
+high_16 = round(high_16_1 / high_16_2, 2)
+
+low_19_1 = collection.find({"学历": "高中及以下", "生活缴费方式": "手机银行"}).count()
+low_19_2 = collection.find({"学历": "高中及以下"}).count()
+low_19 = round(low_19_1 / low_19_2, 2)
+medium_19_1 = collection.find({"学历": "专科及本科", "生活缴费方式": "手机银行"}).count()
+medium_19_2 = collection.find({"学历": "专科及本科"}).count()
+medium_19 = round(medium_19_1 / medium_19_2, 2)
+high_19_1 = collection.find({"学历": "研究生及以上", "生活缴费方式": "手机银行"}).count()
+high_19_2 = collection.find({"学历": "研究生及以上"}).count()
+high_19 = round(high_19_1 / high_19_2, 2)
+
+x_data = ['月到网点次数', '月用手机银行次数', '日常支付', '查询账户余额', '办理银行业务', '转账', '生活缴费']
+y_data1 = [low_4, low_5, low_6, low_7, low_8, low_16, low_19]
+y_data2 = [medium_4, medium_5, medium_6, medium_7, medium_8, medium_16, medium_19]
+y_data3 = [high_4, high_5, high_6, high_7, high_8, high_16, high_19]
+horizontal_bar = pygal.HorizontalBar()
+horizontal_bar.add('高中及以下', y_data1)
+horizontal_bar.add('专科及本科', y_data2)
+horizontal_bar.add('研究生及以上', y_data3)
+horizontal_bar.x_labels = x_data
+horizontal_bar.y_labels = [0.2, 0.4, 0.6, 0.8, 1.0]
+horizontal_bar.title = "以学历划分分析客户行为中使用手机银行的比例"
+horizontal_bar.x_title = "使用手机银行人数/总人数"
+horizontal_bar.y_title = "客户行为"
+horizontal_bar.legend_at_bottom = True
+horizontal_bar.render_to_file('degree_proportion_mobile_banking.svg')
